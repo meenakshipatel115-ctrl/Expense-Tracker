@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Expense Tracker</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}" />
+<!-- Chart.js from CDN for the pie chart -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
+</head>
+<body>
+
+  <div class="app">
+
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="brand">
+        <span class="brand-icon">₹</span>
+        <span class="brand-name">Expense Tracker</span>
+      </div>
+      <nav class="nav">
+        <a href="#dashboard" class="nav-link active" data-target="dashboard">Dashboard</a>
+        <a href="#add-expense" class="nav-link" data-target="add-expense">Add Expense</a>
+        <a href="#history" class="nav-link" data-target="history">History</a>
+      </nav>
+    </aside>
+
+    <!-- Main content -->
+    <main class="main">
+
+      <header class="topbar">
+        <h1 id="page-title">Dashboard</h1>
+        <div class="today" id="today-date"></div>
+      </header>
+
+      <!-- ============ DASHBOARD SECTION ============ -->
+      <section id="dashboard" class="section active">
+
+        <div class="cards">
+          <div class="card">
+            <div class="card-label">Total Spent</div>
+            <div class="card-value" id="stat-total">₹0.00</div>
+          </div>
+          <div class="card">
+            <div class="card-label">This Month</div>
+            <div class="card-value" id="stat-month">₹0.00</div>
+          </div>
+          <div class="card">
+            <div class="card-label">Total Transactions</div>
+            <div class="card-value" id="stat-count">0</div>
+          </div>
+          <div class="card">
+            <div class="card-label">Top Category</div>
+            <div class="card-value" id="stat-top-category">—</div>
+          </div>
+        </div>
+
+        <div class="dashboard-grid">
+          <div class="panel chart-panel">
+            <h2>Spending by Category</h2>
+            <div class="chart-wrapper">
+              <canvas id="categoryPieChart"></canvas>
+            </div>
+            <div id="chart-empty" class="empty-state hidden">No expenses yet. Add one to see your breakdown.</div>
+          </div>
+
+          <div class="panel recent-panel">
+            <h2>Recent Expenses</h2>
+            <div id="recent-list" class="recent-list"></div>
+          </div>
+        </div>
+
+      </section>
+
+      <!-- ============ ADD EXPENSE SECTION ============ -->
+      <section id="add-expense" class="section">
+        <div class="panel form-panel">
+          <h2>Add New Expense</h2>
+          <form id="expense-form">
+            <div class="form-row">
+              <div class="form-group">
+                <label for="amount">Amount (₹)</label>
+                <input type="number" id="amount" name="amount" step="0.01" min="0.01" placeholder="0.00" required />
+              </div>
+              <div class="form-group">
+                <label for="category">Category</label>
+                <select id="category" name="category" required>
+                  <option value="" disabled selected>Select category</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label for="date">Date</label>
+                <input type="date" id="date" name="date" required />
+              </div>
+              <div class="form-group">
+                <label for="description">Description</label>
+                <input type="text" id="description" name="description" placeholder="e.g. Groceries at DMart" maxlength="200" />
+              </div>
+            </div>
+
+            <div class="form-actions">
+              <button type="submit" class="btn btn-primary" id="submit-btn">Add Expense</button>
+              <button type="button" class="btn btn-secondary hidden" id="cancel-edit-btn">Cancel Edit</button>
+              <span id="form-message" class="form-message"></span>
+            </div>
+          </form>
+        </div>
+      </section>
+
+      <!-- ============ HISTORY SECTION ============ -->
+      <section id="history" class="section">
+        <div class="panel">
+          <div class="history-header">
+            <h2>All Expenses</h2>
+            <div class="filters">
+              <select id="filter-category">
+                <option value="All">All Categories</option>
+              </select>
+              <input type="date" id="filter-start" title="From date" />
+              <input type="date" id="filter-end" title="To date" />
+              <button id="filter-apply" class="btn btn-secondary">Filter</button>
+              <button id="filter-reset" class="btn btn-ghost">Reset</button>
+            </div>
+          </div>
+
+          <div class="table-wrapper">
+            <table id="expense-table">
+              <thead>
+                <tr>
+                  <th>Date</th>
+                  <th>Category</th>
+                  <th>Description</th>
+                  <th class="align-right">Amount</th>
+                  <th class="align-center">Actions</th>
+                </tr>
+              </thead>
+              <tbody id="expense-table-body">
+              </tbody>
+            </table>
+            <div id="table-empty" class="empty-state hidden">No expenses found.</div>
+          </div>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <!-- Toast notification -->
+  <div id="toast" class="toast hidden"></div>
+
+  <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+</body>
+</html>
